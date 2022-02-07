@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>Cours SQL -03- Entreprise partie 2 2</title>
+</head>
+
+<body>
+    <main class="container">
+        <h1 class="text-center">Les requêtes MySQL part.2</h1>
+
+        <section class="row">
+            <div class='col-12'>
+                <h2 class="text-center">1- INSERT INTO => La requête d'insertion</h2>
+                <ul>
+                    <li>1ere Methode d'isertion : <code>INSERT INTO employes (prenom, nom, sexe, service, date_embauche, salaire) VALUES ('Alexis', 'Santiago', 'm', 'informatique', '2021-12-28', 1800);</code></li>
+                    <li>Pour verifier que l'id alexis a bien etait incrémenter il ya deux façon <code>SELECT * FROM employes WHERE prenom='Alexis';</code> deuxieme methode <code>SELECT * FROM employes ORDER BY id_employes DESC LIMIT 0,1;</code></li>
+                    <li>2 eme methode d'insertion <code>INSERT INTO employes VALUES (NULL, 'Jeanne', 'Richy', 'f', 'informatique', '2012-01-28', 2000);</code>Pour cette méthode chaque colonne doit etre déclarer sinon le systeme croit a une erreur</li>
+                    <li class="alert alert-warning">NUL nous permet de laisser le champs id_employes se remplir seul car il est auto-incrémenté</li>
+                </ul>
+
+            </div>
+        </section>
+
+        <section class="row">
+            <div class='col-12'>
+                <h2 class="text-center">2- Les requêtes de modification</h2>
+                <p></p>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <h3 class="text-center">a- Mise a jour grâce au mot clef UPDATE</h3>
+                <ul>
+                    <li>Pour augmenter le salaire d'un employé on utilisera la requête suivante <code>UPDATE employes SET salaire=2200 WHERE id_employes=991;</code></li>
+                    <li class="alert alert-danger">Attention il est impératif lorsque l'on fait une modification la faire à partir de l'id de la personne car c'est le seul element qui sera forcement unique dans notre BDD</li>
+                    <li>Il est possible de faire plusieurs modification en seule requête mais il faudra bien respecter l'ordre des colonnes de table et les separer par une virgule<code>UPDATE employes SET service='commercial', salaire=1872 WHERE id_employes=991;</code></li>
+                </ul>
+            </div>
+            <div class="col-12 col-md-6">
+                <h3>b Supprimer avec DELETE</h3>
+                <ul>
+                    <li>On va supprimer l'enregistrement d'un employes <code>DELETE FROM employes WHERE id_employes=992;</code></li>
+                    <li>On peut supprimer plusieurs enregistrements grâce au code suivant <code>DELETE FROM employes WHERE service='informatique'</code>=> se code permet supprimer toutes les personnes qui travaillent au service informatique</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="row">
+            <div class="col-12">
+                <h2>3- Quelque EXO</h2>
+
+                <ol>
+                    <li>1-Afficher le service de l'employes 547</li>
+                    <li>2-Afficher la date d'embauche d'amandine</li>
+                    <li>3-Afficher le nombre de personnes qui travaillent au service commercial</li>
+                    <li>4-Afficher le coût des commerciaux sur une année</li>
+                    <li>5-Afficher le salaire moyen par service</li>
+                    <li>6-Afficher le nombre de recrutements en 2010</li>
+                    <li>7-Augmenter le salaire de tous les employes de 100€</li>
+                    <li>8-Afficher le nombre de services</li>
+                    <li>9-Afficher toutes les infos de l'employes du service commercial ayant le plust haut salaire</li>
+                    <li>10-Afficher l'employes ayant été embauché le plus récemment par l'entreprise</li>
+                </ol>
+
+                <div class="col-12 col-md-6">
+                    <ol>
+                        <li><code>1-SELECT service FROM employes WHERE id_employes=547;</code></li>
+                        <li><code>2-SELECT date_embauche FROM employes WHERE prenom='Amandine';</code></li>
+                        <li><code>3-SELECT nom, prenom, service FROM employes WHERE service='commercial';</code></li>
+                        <li><code>4-SELECT service, salaire, salaire*12 AS salaire_annee_co FROM employes WHERE service='commercial';</code></li>
+                        <li><code>5-SELECT service, ROUND(AVG(salaire)) FROM employes GROUP BY service;</code></li>
+                        <li><code>6-SELECT COUNT(*) AS recrutement FROM employes WHERE date_embauche like '2010%' (ou BETWEEN '2010-01-01' AND '2010-12-31';);</code></li>
+                        <li><code>7-UPDATE employes SET salaire=salaire+100;</code></li>
+                        <li><code>8-SELECT COUNT(DISTINCT service) FROM employes;</code></li>
+                        <li><code>9-SELECT prenom, salaire FROM employes WHERE service='commercial' AND salaire = ( SELECT MAX(salaire) FROM employes WHERE service='commercial');</code></li>
+                        <li><code>10-SELECT * FROM employes WHERE date_embauche=( SELECT MAX(date_embauche) FROM employes);</code></li>
+                    </ol>
+                </div>
+
+                <h3>Autre reponse</h3>
+
+                <div>
+                    <ol>
+                        <li><code>SELECT service FROM employes WHERE id_employes='547';</code></li>
+                        <li><code>SELECT prenom, date_embauche FROM employes WHERE prenom='Amandine';</code></li>
+                        <li><code>SELECT COUNT(*) AS nbr_commerciaux FROM employes WHERE service='commercial';</code></li>
+                        <li><code>SELECT SUM(salaire*12) AS salaire_annuel_commercial FROM employes WHERE service='commercial';</code></li>
+                        <li><code>SELECT service, ROUND(AVG(salaire)) FROM employes GROUP BY service;</code></li>
+                        <li><code>SELECT COUNT() FROM employes WHERE date_embauche BETWEEN '2010-01-01' AND '2010-12-31';</code> OU <code>SELECT COUNT() FROM employes WHERE date_embauche LIKE '2010%';</code> OU <code>SELECT COUNT(*) FROM employes WHERE date_embauche >= '2010-01-01' AND date_embauche <= '2010-12-31';</code></li>
+                        <li><code>UPDATE employes SET salaire=salaire+100;</code></li>
+                        <li><code>SELECT COUNT(DISTINCT service) AS nombre_service FROM employes;</code></li>
+                        <li><code>SELECT * FROM employes WHERE salaire=(SELECT MAX(salaire) FROM employes WHERE service='commercial');</code></li>
+                        <li><code>SELECT * FROM employes WHERE date_embauche=(SELECT MAX(date_embauche) FROM employes);</code> OU <code>SELECT * FROM employes ORDER BY date_embauche DESC LIMIT 0,1;</code></li>
+                    </ol>
+                </div>
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+
+    <!-- Script Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>

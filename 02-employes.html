@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>Cours SQL - Employés</title>
+</head>
+
+<body>
+    <main class="container">
+        <h1 class="text-center">Les requête MySQL partie 1</h1>
+        <section class="row">
+
+            <div class="col-12">
+                <h2 class="text-center">1- Base d'une BDD</h2>
+
+                <ul>
+                    <li>Créer une BDD : <code>CREATE DATABASE test CHARACTER SET 'utf8'.code> </li>
+                    <li>Voir les BDD qui se trouvent dans notre serveur : SHOW DATABASES.</li>
+                    <li>Montrer les tables sur le terminal <code>SHOW TABLES</code></li>
+                    <li>Utiliser une BDD : <code>USE nombdd;</code> </li>
+                    <li>Supprimer une base de donnée : <code>DROP DATABASE IF EXISTS nombdd;</code> </li>
+                </ul>
+            </div>
+
+
+
+        </section>
+
+        <section class="row">
+            <div class="col-12">
+                <h2 class="text-center">2- Créer une table et ses colonnes</h2>
+
+                <ul>
+                    <li>Créer une table dans la base entreprise :
+                        <code>CREATE TABLE IF NOT EXISTS employes (
+                            id_employes int(3) NOT NULL AUTO_INCREMENT,
+                            prenom varchar(20) DEFAULT NULL,
+                            nom varchar(20) DEFAULT NULL,
+                            sexe enum('f' , 'm') NOT NULL,
+                            service varchar(30) DEFAULT NULL,
+                            salaire float DEFAULT NULL,
+                            PRIMARY KEY (id_employes)
+                            )ENGINE+InnoDB DEFAULT CHARSET=latin1;
+                        </code>
+
+
+                    </li>
+                    <li>Ici on a d'abord créer une table, On dit ensuite les champs qui vont composer la table (id-employes, prenom, nom, sexe, service, salaire). On instaure le fait que la clé principale (PK) est id_employes.</li>
+                    <li>Insérer des données dans la table employes :<br>
+                        <code>INSERT INTO employes (id_employes, prenom, nom, sexe, service, date_embauche, salaire) VALUES(350, 'Jean-pierre', 'Laborde', 'm', 'direction', '1999-12-09', 5000),(388, 'Clement', 'Gallet', 'm', 'commercial', '2000-01-15', 2300),(415, 'Thomas', 'Winter', 'm', 'commercial', '2000-05-03', 3550),(417, 'Chloe', 'Dubar', 'f', 'production', '2001-09-05', 1900),(491, 'Elodie', 'Fellier', 'f', 'secretariat', '2002-02-22', 1600),(509, 'Fabrice', 'Grand', 'm', 'comptabilite', '2003-02-20', 1900),(547, 'Melanie', 'Collier', 'f', 'commercial', '2004-09-08', 3100),(592, 'Laura', 'Blanchet', 'f', 'direction', '2005-06-09', 4500),(627, 'Guillaume', 'Miller', 'm', 'commercial', '2006-07-02', 1900),(655, 'Celine', 'Perrin', 'f', 'commercial', '2006-09-10', 2700),(699, 'Julien', 'Cottet', 'm', 'secretariat', '2007-01-18', 1390),(701, 'Mathieu', 'Vignal', 'm', 'informatique', '2008-12-03', 2000),(739, 'Thierry', 'Desprez', 'm', 'secretariat', '2009-11-17', 1500),(780, 'Amandine', 'Thoyer', 'f', 'communication', '2010-01-23', 1500),(802, 'Damien', 'Durand', 'm', 'informatique', '2010-07-05', 2250),(854, 'Daniel', 'Chevel', 'm', 'informatique', '2011-09-28', 1700),(876, 'Nathalie', 'Martin', 'f', 'juridique', '2012-01-12', 3200),(900, 'Benoit', 'Lagarde', 'm', 'production', '2013-01-03', 2550),(933, 'Emilie', 'Sennard', 'f', 'commercial', '2014-09-11', 1800),(990, 'Stephanie', 'Lafaye', 'f', 'assistant', '2015-06-02', 1775);</code>                        </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="row">
+            <div class="col-12">
+                <h2 class="text-center">SELECT et DISTINCT</h2>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <ul>
+                    <li>Pour vir tout le contenu d'une table : <code>SELECT * FROM employes;</code> </li>
+                    <li>Pour sélectionner les prénoms et les noms des employes : <code>SELECT prenom, nom FROM employes;</code> </li>
+                    <li>Pour afficher les données sans doublons : <code>SELECT DISTINCT nom FROM employes;</code> </li>
+                </ul>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="alert alert-danger">
+                    <p>Les requêtes ne sont pas sensible a la casse cependant une convention indique qu'il faut mettre les mot clés en majuscule c'est ainsi plus facile de s'y retrouver dans le code.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="row">
+            <div class="col-12">
+                <h2 class="text-center">4- Les conditions</h2>
+            </div>
+
+            <div class="col-12 col-md-4">
+
+                <h3 class="text-center">Le mot clef <code>WHERE</code> </h3>
+
+                <ul>
+                    <li class="alert alert-success">Por chercher une condition sur une partie des données <code>SELECT colonne, colonne FROM table WHERE colonne="donnée"</code> </li>
+                    <li>Ici si nous cherchons à voir toutes les infos des employés masculins, on peut faire le code suivant : <code>SELECT * FROM employes WHERE sexe='m'</code> </li>
+                    <li>Exo Afficher le salaire, le nom et le sexe elodie <code> SELECT prenom, nom, salaire FROM employes WHERE prenom='Elodie';</code> Afficher le nom prenom du salaire 1390 <code>SELECT prenom, nom, salaire FROM employes WHERE salaire='1390';</code>
+                    </li>
+                </ul>
+
+            </div>
+            <div class="col-12 col-md-4"> SELECT * FROM id_employes WHERE employes BETWEEN '2006-01-01' AND '2010-01-01';
+                <h3>LE mot clef BETWEEN</h3>
+
+                <ul>
+                    <li class="alert alert-success">Nous chercons grace à notre condition quelque chose qui est contenu entre deux element <code>SELECT * FROM table WHERE colonne BETWEEN 'donnée' AND 'données';</code> </li>
+                    <li class="alert alert-danger">Attention Dans le BDD, les dates sont toujours au format etat-unien => YYYY-MM-DD</li>
+                    <li>Exo Trouvez les infos sur les personnes embauchés entre le 1er janvier 2006 et le 1er janvier 2010</li>
+                </ul>
+            </div>
+            <div class="col-12 col-md-4">
+                <h3>Le mot clef <code>LIKE</code> </h3>SELECT * FROM employes WHERE prenom LIKE '%s%';
+                <ul>
+                    <li class="alert alert-success">Ici on affiche les employés dont le prénom commence par S <code>SELECT * FROM employes WHERE prenom LIKE 's%';</code> </li>
+                    <li>Dans cette ligne de code, le pourcentage signifie que l'on recherche s en début de mot, ainsi le pourcentage signifie que des caractéres viennent à la suite.</li>
+                    <li>Avec la présence du pourcentage avant et apres le caractere rechercher , nous demandons au systeme de trouver des enrisgretements contenant l'expression</li>
+                    <li>Exo rechercher tous les infos sur les salarier ayant un prenom composé <code> SELECT * FROM employes WHERE prenom LIKE '%-%';</code> </li>
+                </ul>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <h3 class="text-center">CURDATE()</h3>
+                <ul>
+                    <li class="alert alert-success">CURDATE permet de faire une requête qui donne la date du serveur (date du jour) : <code>SELECT CURDATE</code> </li>
+                    <li>Grâce à CURDATE, nous pouvons donc sélectionner des éléments entre une date donnée et aujourd'hui</li>
+                    <li>EXO afficher toutes les infos entre les employés embauché entre 2008 et la date d'aujourd'hui <code> SELECT * FROM employes WHERE date_embauche BETWEEN '2008-01-01' AND CURDATE();</code> </li>
+                </ul>
+            </div>
+            <div class="col-12 col-md-6">
+                <h3 class="text-center">IN</h3>
+                <ul>
+                    <li>IN permet de faire la meme chose que = dans le WHERE sauf qu'il permet de sélectionner plusieurs données <code>SELECT * FROM employes WHERE prenom IN('Mathieu', 'Amandine');</code> </li>
+                    <li class="alert alert-success">Egal (=) permet d'annoncer une seule valeur tandis que IN permet d'annoncer plusieurs valeurs</li>
+                    <li>Trouver les employés qui ne sont pas au service compta ni au service informatique et ranger les services par ordre croissant <code> SELECT nom, prenom, service FROM employes WHERE service NOT IN('comptabilite', 'informatique') ORDer BY service ASC; ou DESC pour desordonner</code>
+                        <code>SELECT nom, service, salaire FROM employes WHERE service IN('direction', 'secretariat') ORDER BY salaire ASC;</code></li>
+                </ul>
+            </div>
+
+            <div class="col-12">
+                <h3 class="text-center">Le mot clef HAVING</h3>
+                <p>Ici on veut selectionner seulement les service qui on plus de deux employé <code>SELECT service, COUNT(*) AS nombre_employes FROM employes GROUP BY service HAVING COUNT(*) > 2;</code> Grâce à COUNT(*) suivi du mot clef AS on crée une colonne
+                    qui s'appelle 'nombre_employes'. En mettant GROUP BY on décide grâce à quelle colonne on va rassembler nos employes</p>
+            </div>
+
+        </section>
+
+        <section class="row">
+            <div class="col-12">
+                <h2>Les opérateurs de comparaison</h2>
+            </div>
+            <div class="col-12">
+                <table class="table table-striped table-hover" id="tableComparaisons">
+                    <thead>
+                        <tr>
+                            <th scope="col">Opérateur</th>
+                            <th scope="col">Symbole</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">=</th>
+                            <td>Est égal à</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">&gt;</th>
+                            <td>Strictement supérieur à</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">&lt;</th>
+                            <td>Strictement inférieur à</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">&gt;=</th>
+                            <td>Supérieur ou égal à</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">&lt;=</th>
+                            <td>Inférieur ou égal à</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">&lt; &gt; ou !=</th>
+                            <td>est différent de</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <h3>L'opérateur != ou &&</h3>
+                <ul>
+                    <li>Je veux afficher le nom, le prénom et le service de tous les employés qui ne sont pas au service direction: <code>SELECT nom, prenom, service FROM employes WHERE service != 'direction';</code> </li>
+                    <li><code>SELECT * FROM table WHERE colonne != 'donnée';</code></li>
+                </ul>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <h3>L'opérateur &</h3>SELECT * FROM employes WHERE salaire > '3000';
+                <p>Affichez toutes les infos sur tous les employés qui gagne plus de 3000€</p>
+
+            </div>
+        </section>
+
+        <section class="row">
+            <div class="col-12">
+                <h2>Classement avec ORDER BY</h2>
+                <ul>
+                    <li>Grâce à ORDER BY on classe les donnée par order alphabetique ou numerique on peut par exemple</li>
+                    <li>On peut par exemple choisir de ranger notre tableau par ordre alphabetique pour les noms de famille <code> SELECT * FROM employes ORDER BY nom ASC;</code> </li>
+                    <li>Attention, si on ne précise pas ASC(ascendant = croissant) ou DESC(descendant = décroissement) ce sera naturellement trier de façon ascendante donc dans l'ordre croissant (du + petit au + grand)</li>
+                    <li>Fonctionne aussi bien avec des valeurs string qu'avec des valeurs number. Classez les personnes en fonction du salaire qu'elles touche <code>SELECT * FROM employes ORDER BY salaire DESC;</code> </li>
+                    <li>ORDER BY permet de trier sur plusieur colonne <code>SELECT nom, prenom, service, salaire FROM employes ORDER BY sexe ASC, salaire ASC;</code></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="row">
+            <div class="COL-12">
+                <h2 class="text-center">Limiter les résultats avec le mot clef LIMIT</h2>
+                <ul>
+                    <li class="alert alert-danger">LIMIT fonctionne avec deux chiffre : <code>LIMIT 0,3</code> => le premier définit l'enregistrementet le seconde chiffre nous indique combien de résultats nous voulons afficher</li>
+                    <li>Exo afficher les employes en les classement par salaire (+ grand au plus petit ) et en limitant au 5 plus grand salaire <code>SELECT * FROM employes ORDER BY salaire DESC LIMIT 0.5; a partir du premier salaire haut SELECT * FROM employes ORDER BY salaire DESC LIMIT 2,5;a partir du deuxiemme salaire</code></li>
+                    <li></li>
+                </ul>
+
+            </div>
+        </section>
+
+        <section class="row">
+            <div class="col-12">
+                <h2 class="text-center">Réaliser des calculs dans nos requêtes</h2>
+                <p>Les opérateurs que nous connaissons déjà peuvent être utilisés dans le terminal. Ainsi, le signe de la multiplication sera '*'</p>
+                <p>EXO afficher les prénoms et les noms des employes ainsi que leur salaire annuel <code>SELECT nom, prenom, salaire*12 FROM employes;</code></p>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <h3 class="text-center">Utiliser un alias grâce au mot clef AS</h3>
+                <ul>
+                    <li>En utilisant le code du dessu, on va avoir une colonne provisoire mais qui n'a pas de nom prédefini</li>
+                    <li>Grâce au mot clef AS on peut créer notre colonne ponctuellement mais qui aura un nom qui fais sans et grâce à laquelle on pourra par exemple choisir d'ordonner notre tableau</li>
+                    <li>Exo faire la me^me requête que celle du dessus en donnant un alais 'salaire_annuel' est en ordonnant la liste du salaire annuel le plus élévé au plus bas <code>SELECT nom, prenom, salaire, salaire*12 AS salaire_annuel FROM employes ORDER BY salaire_annuel DESC;</code>                        Exo2 salaire par heure <code>SELECT nom, prenom, salaire, salaire/150 AS salaire_heure FROM employes ORDER BY salaire_heure ASC;</code></li>
+                </ul>
+            </div>
+            <div class="col-12 col-md-6">
+                <h3>Calculer une somme SUM() et une moyenne AVG()</h3>
+
+                <ul>
+                    <li>Grâce au code qui suit on va pouvoir calculer la somme totale des salaires annuels des employés <code>SELECT SUM(salaire*12) AS salaire_annuel_employes FROM employes;</code></li>
+                    <li>Exo calculez le salaire mensuel moyen d'un employé <code>SELECT AVG(salaire) AS salaire_moyen_employes FROM employes;</code></li>
+                </ul>
+
+            </div>
+            <div class="col-12 col-md-6">
+                <h3>Arrondir un nombre grâce au mot clef ROUND()</h3>
+                <ul>
+                    <li class="alert alert-danger">Il faut savoir qu'il est possible de cumuler deux notions comme AVG(): ROUND(AVG())</li>
+                    <li>Exo faire la meme requête qu'au dessus en arrondissant le salaire moyen d'un employé <code>SELECT ROUND(AVG(salaire)) AS salaire_moyen_arrrondi FROM employes;</code></li>
+                </ul>
+            </div>
+            <div class="col-12 col-md-6">
+                <h3>Compter grâce à COUNT()</h3>
+                <p>Grâce au mot clef COUNT() on va pouvoir compter le nombre d'employes de sexe feminin <code>SELECT COUNT(*) AS employes_femme FROM employes WHERE sexe='f';</code></p>
+            </div>
+
+            <div class="col-12">
+                <h3>Isoler une valeure min ou max grâce à MIN() ou MAX()</h3>
+                <ul>
+                    <li>Grâce à MIN() on peut par exemple trouver le salaire le plus bas de l'entreprise : <code> on peut pas avoir le nom de la personne avec cette requête faire une requête imbriquée SELECT prenom, MIN(salaire) FROM employes; requête imbriquée pour afficher le nom de la personne du salaire minimun SELECT salaire FROM employes WHERE salaire=(SELECT MIN(salaire) FROM employes)</code></li>
+                    <li>La requête simple ne fonctionnement pas car il faut une requête imbriquée pour que le terminal comprenne ce que l'on veut faire. Il faudra donc la requête suivante. Ici on sélectionne tout d'abord le salaire minimun puis on cherche
+                        le prenom et le salaire de la personne qui a le plus bas salaire </li>
+                    <li>Le systeme exécute d'abord la requête entre parenthèse (requête imbriquée) et l'utilise comme source pour l'autre requête</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="row">
+            <div class="col-12">
+                <h2>Les regroupements avec GROUP BY</h2>
+                <ul>
+                    <li>Grâce au code suivant, on peut connaître le nombre d'employes par service <code>SELECT service, COUNT(*) AS nombre_employes FROM employes GROUP BY service;</code></li>
+                    <li class="alert alert-warning">La virgule qui separe srvice et COUNT() sert à signifier 'ET' On dit ici sélectionne service et compte le nombre d'employés.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="row">
+            <div class="col-12">
+                <h2>Les conditions multiples</h2>
+                <p>Grâce aux conditions multiple on peut vérifier plusieurs instruction par exemple on peut selectionner les employes qui travaillement dans le service commercial et qui gagne plus de 2000€ <code>SELECT nom, prenom, service , salaire FROM employes WHERE service='commercial' AND salaire salaire >=2000;</code></p>
+            </div>
+            <div class="col-12">
+                <h3>Ordre de priorité OR et AND</h3>
+                <ul>
+                    <li>Lorsqu'il y a à la fois OR et AND dans la meme requête, le systeme lit d'abord la condition de la droite vers la gauche exemple : <code>SELECT nom, prenom, salaire FROM employes WHERE service='production' AND salaire='1900' OR salaire='2300'; pour le sense de lecture occidantale SELECT nom, prenom, salaire FROM employes WHERE service='production' AND (salaire='1900' OR salaire='2300'); seule 1900 est ecris car il a remplie la condition. </code></li>
+                    <li>Pour garantir l'ordre naturel de lecture de gauche a droite on va utiliser les parenthèse</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+
+
+    <!-- Script Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>

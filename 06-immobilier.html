@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>Cours SQL -06 Immobilier partie 1</title>
+</head>
+
+<body>
+    <main class="container">
+        <h1 class="text-center">La BDD immobilier</h1>
+        <section class="row">
+            <div class="col-12 col-md-6">
+                <h2 class="text-center">Création de la BDD</h2>
+
+
+                <ul>
+                    <li>Création de la BDD : <code>CREATE DATABASE immobilier CHARACTER SET 'utf8';</code></li>
+                    <li>On pense bien à choisir la BDD que l'on veut utiliser en faisant <code>USE immobilier;</code> </li>
+                    <li>Création de la table agence : <code>CREATE TABLE IF NOT EXISTS agence (idAgence int(6) NOT NULL AUTO_INCREMENT, nom, varchar(100) NOT NULL, adresse varchar(100) NOT NULL, PRIMARY KEY (idAgence)) ENGINE=InnnoDB DEFAULT CHARSET=latin1;</code>                        Insertion des donnes dans la table agence <code>INSERT INTO agence (idAgence, nom, adresse) VALUES
+                    (257400, 'logic-immo', 'rue logic'),
+                    (383505, 'century21', 'rue century'),
+                    (504585, 'laforet', 'rue laforet'),
+                    (544688, 'fnaim', 'rue fnaim'),
+                    (608870, 'orpi', 'rue orpi'),
+                    (654178, 'foncia', 'rue foncia'),
+                    (654658, 'guy-hoquet', 'rue guy-hoquet'),
+                    (654893, 'seloger', 'rue seloger'),
+                    (692702, 'bouygues immobilier', 'rue bouygues');</code></li>
+                    <li>Création de la table demande : <code>CREATE TABLE IF NOT EXISTS demande (idDemande int(5) NOT NULL AUTO_INCREMENT, idPersonne int(3) NOT NULL, genre varchar(100) NOT NULL, ville varchar(100) NOT NULL, budget int(7) NOT NULL, superficie int(5) NOT NULL, categorie varchar(100) NOT NULL, PRIMARY KEY (idDemande), KEY idPersonne (idPersonne)) ENGINE=InnoDB DEFAULT CHARSET=latin1;</code></li>
+                    <li>Création de la table logement : <code>CREATE TABLE IF NOT EXISTS logement (idLogement int(4) NOT NULL AUTO_INCREMENT, genre varchar(100) NOT NULL, ville varchar(100) NOT NULL, prix int(7) NOT NULL, superficie int(5) NOT NULL, categorie varchar(100) NOT NULL, PRIMARY KEY (idLogement)) ENGINE=InnoDB DEFAULT CHARSET=latin1;</code></li>
+                    <li>Création de la table logement_agence : <code>CREATE TABLE IF NOT EXISTS logement_agence (idLogementAgence int(5) NOT NULL AUTO_INCREMENT, idAgence int(6) NOT NULL, idLogement int(4) NOT NULL, frais int(7) NOT NULL, PRIMARY KEY (idLogementAgence), KEY idAgence (idAgence), KEY idLogement (idLogement)) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;</code></li>
+                    <li>Création de la table logement_personne : <code>CREATE TABLE IF NOT EXISTS logement_personne (idLogementPersonne int(5) NOT NULL AUTO_INCREMENT, idPersonne int(3) NOT NULL, idLogement int(4) NOT NULL, PRIMARY KEY (idLogementPersonne), UNIQUE KEY idLogement (idLogement), KEY idPersonne (idPersonne)) ENGINE=InnoDB DEFAULT CHARSET=latin1;</code></li>
+                    <li>Création de la table personne : <code>CREATE TABLE IF NOT EXISTS personne (idPersonne int(3) NOT NULL AUTO_INCREMENT, prenom varchar(100) NOT NULL, PRIMARY KEY (idPersonne)) ENGINE=InnoDB DEFAULT CHARSET=latin1;</code></li>
+                    <li>Création des clefs étrangères (FOREIGN KEY = FK) : <code>ALTER TABLE logement_agence ADD CONSTRAINT logement_agence_ibfk_2 FOREIGN KEY (idLogement) REFERENCES logement (idLogement), ADD CONSTRAINT logement_agence_ibfk_1 FOREIGN KEY (idAgence) REFERENCES agence (idAgence);</code></li>
+                    <li></li>
+                </ul>
+
+                <div class="col-12 col-md-6">
+                    <h2 class="text-center">Questions sur la BDD</h2>
+
+                    <ol>
+                        <li>Afficher le nom des agence</li>
+                        <li>Afficher l'id de l'agence 'Orpi'</li>
+                        <li>Afficher le premier enregistrement de la table logement</li>
+                        <li>Compter le nombre de logements</li>
+                        <li>Afficher les logements à vendre qui coûtent moins de 150000€ dans l'ordre croissant des prix</li>
+                        <li>Compter le nombre de logement disponible en location et donner à la colonne à la colonne l'alias logement_location</li>
+                        <li>Afficher les villes différentes recherchés par les personne demandeuse d'un logement</li>
+                        <li>Afficher le nombre de biens à vendre par ville</li>
+                        <li>Afficher l'id des logements destinés à la location</li>
+                        <li>Afficher l'id des logements dont la supperficie est entre 20m2 et 30m2</li>
+
+                    </ol>
+
+
+                    <ol>
+                        <li><code>SELECT nom FROM agence;</code></li>
+                        <li><code>SELECT idAgence FROM agence WHERE nom='Orpi';</code></li>
+                        <li><code>SELECT * FROM agence LIMIT 0,1;</code></li>
+                        <li><code>SELECT COUNT(*) FROM logement;</code></li>
+                        <li><code>SELECT * FROM logement WHERE prix &lt;signe inférieur 150000 AND categorie='vente' ORDER BY prix ASC;</code></li>
+                        <li><code>SELECT COUNT(idLogement) AS logement_location FROM logement WHERE categorie='location'; </code></li>
+                        <li><code>SELECT ville FROM demande GROUP BY ville; ou SELECT DISTINCT ville FROM demande; </code></li>
+                        <li><code>SELECT COUNT(idLogement) AS 'nombre de logements', ville FROM logement WHERE ville IN (SELECT DISTINCT(ville) FROM logement) AND categorie='vente' GROUP BY ville;</code></li>
+                        <li><code>SELECT idLogement FROM logement WHERE categorie='location';</code></li>
+                        <li><code>SELECT idLogement FROM logement WHERE superficie BETWEEN '20' AND '30';</code></li>
+                        <li><code>SELECT MIN(prix) FROM logement WHERE categorie='vente';</code></li>
+                        <li><code></code></li>
+                    </ol>
+
+
+                    <ol>
+                        <li>Quel est le prix vendeur (hors comission) du logement le moins cher à vendre</li>
+                        <li>Dans quel ville se trouve les maison à vendre</li>
+                        <li>L'agence Orpi souhaite diminier les frais qu'elle applique sur le logement ayand l'id 5246 Passez les frais de ce logement de 800 a 700</li>
+                        <li>Quel est l'id des logements gérés par l'agence 'la forêt'</li>
+                        <li>Afficher le nombre de proprietaire de Paris avec l'alias proprio_parisien</li>
+                        <li>Afficher toutes les infos sur les trois première personne souhaitant acheter un logement</li>
+                        <li>Afficher le prénom du vendeur pour le logement ayant l'id 5770</li>
+                        <li>Afficher le prenom des personne souhaitant avoir un logement sur Lyon</li>
+                        <li>Afficher les prenoms des personne souhaitant acceder à un logement en location à Paris</li>
+                        <li>Afficher les prenom des personne souhaitant acheter un logement de la plus grande a la plus petite supperficie</li>
+                        <li>Quel sont les prix finaux proposé par les agences pour la maison a la vente ayant la référence 5091 indice prix plus frais d'agence</li>
+                    </ol>
+
+                    <ol>
+                        <li><code>SELECT MIN(prix) AS 'prix minimum' FROM logement WHERE categorie = 'vente';</code></li>
+                        <li><code>SELECT genre, ville FROM logement WHERE genre = 'maison'</code></li>
+                        <li><code>UPDATE logement_agence SET frais='730' WHERE idLogement = 5246;</code></li>
+                        <li><code>SELECT idLogement FROM logement_agence WHERE idAgence = (SELECT idAgence FROM agence WHERE nom = 'laforet');</code></li>
+                        <li><code> SELECT COUNT(DISTINCT(lp.idPersonne)) AS 'proprio_parisien' FROM logement_personne lp, logement l WHERE lp.idLogement= l.idLogement AND ville = 'Paris'; autre <code>SELECT COUNT(DISTINCT(idPersonne)) AS 'proprios parisiens' FROM logement_personne WHERE idLogement IN (SELECT idLogement FROM logement WHERE ville = 'Paris');</code></code>
+                        </li>
+                        <li><code>SELECT * FROM personne p, demande d WHERE p.idPersonne = d.idPersonne and d.categorie = 'vente' ORDER BY  idDemande LIMIT 0,3;</code> autre <code> SELECT * FROM personne WHERE idPersonne IN (SELECT idPersonne FROM demande WHERE categorie='vente') LIMIT 0,3;</code></li>
+                        <li><code>SELECT p.prenom, lp.logement_personne FROM personne p, logement_personne lp WHERE p.idPersonne=1p.idPersonne AND idLogement=5770; autre <code> SELECT p.prenom, lp.idLogement FROM personne p, logement_personne lp WHERE p.idPersonne = lp.idPersonne AND lp.idLogement=5770;</code></code>
+                        </li>
+                        <li><code>SELECT p.prenom FROM personne p, demande d WHERE p.idPersonne=d.idPersonne AND ville='Lyon'; autre <code>SELECT prenom FROM personne WHERE idPersonne IN (SELECT idPersonne FROM demande WHERE ville='Lyon');</code></code>
+                        </li>
+                        <li><code>SELECT prenom FROM personne WHERE idPersonne IN (SELECT idPersonne FROM demande WHERE categorie='location' AND ville='Paris'); autre <code>SELECT p.prenom FROM personne p, demande d WHERE p.idPersonne = d.idPersonne AND d.categorie='location' AND d.ville='Paris';</code></code>
+                        </li>
+                        <li><code>SELECT personne.prenom, demande.superficie FROM personne, demande WHERE personne.idPersonne = demande.idPersonne AND categorie= 'vente' ORDER BY demande.superficie DESC;</code></li>
+                        <li><code>SELECT a.nom, (la.frais+l.prix) AS "prix frais d'agence compris" FROM agence a, logement_agence la, logement l WHERE a.idAgence = la.idAgence AND l.idLogement = la.idLogement AND la.idLogement = 5091;</code></li>
+                    </ol>
+
+
+                    <ol>
+                        <li>Si l'ensemble des logements étaient vendus ou loués demain, quel serait le bénéfice généré aux frais d'agence et pour chaque agence (Atlas : bénéfice / classement : dans l'ordre croissant des gains)</li>
+                        <li>Affichez les id des biens en location, les prix, suivis des frais d'agence (classement : dans l'ordre croissant des prix)</li>
+                        <li>Quel est le prenom du proprietaire proposant le logement le mois cher à louer </li>
+                        <li>Afficher le prenom et la ville ou se trouve le logement de chaque proprietaire</li>
+                    </ol>
+                    <ol>
+                        <li><code> SELECT a.nom, SUM(l_a.frais) AS 'Bénéfices' FROM agence a, logement_agence l_a WHERE a.idAgence = l_a.idAgence GROUP BY nom ORDER BY Bénéfices ASC;</code></li>
+                        <li><code>SELECT logement.idLogement, logement.prix, logement_agence.frais FROM logement, logement_agence WHERE logement.idLogement = logement_agence.idLogement AND logement.categorie='location' ORDER BY logement.prix ASC;</code></li>
+                        <li><code>SELECT personne.prenom FROM logement, personne, logement_personne WHERE personne.idPersonne = logement_personne.idPersonne AND logement.idLogement = logement_personne.idLogement AND categorie='location' ORDER BY logement.prix ASC LIMIT 0,1;</code></li>
+                        <li><code>SELECT p.prenom, l.ville FROM logement l, personne p, logement_personne lp WHERE p.idPersonne = lp.idPersonne AND l.idLogement = lp.idLogement AND l.categorie='vente';</code></li>
+                    </ol>
+
+                    <ol>
+                        <li>Quel est l'agence qui s'occupe de plus de logements à Paris ? (alias logement parisiens // classement : ordre decroissement de la colonne que l'on a genere)</li>
+                        <li>Affichez le prix et le prénom des vendeurs dont les logements sont proposé à 130000€ ou moins en prix final avec les frais appliqués par les agences (alias prix final // classement : ordre croissant de la colonne généré)</li>
+                        <li>Affichez le nombre de logement a la vente dans la ville de recherche de HUGO (alias nombre de logements)</li>
+
+
+                    </ol>
+
+                    <ol>
+                        <li><code>SELECT agence.nom, COUNT(l.ville) AS 'logement parisien' FROM logement WHERE agence a, logement l, logement_agencela=WHERE la.idAgence=a.idAgence AND la.idLogement = l.idLogement AND L.ville='Paris' GROUP BY a.nom ORDER BY nbr_logements_parisiens DESC;</code></li>
+                        <li><code>SELECT p.prenom, l.prix+la.frais AS 'prix_final' FROM personne p, logement l, logement_agence la, logement_personne lp WHERE p.idPersonne = lp.idPersonne AND l.idLogement = la.idLogement AND l.idLogement = lp.idLogement AND lp.idLogement = la.idLogement AND l.prix+la.frais &lt;= 130000 AND categorie='vente' ORDER BY prix_final ASC;</code></li>
+                        <li><code>SELECT COUNT(l.idLogement) AS 'nbr_de_logements' FROM logement l, personne p, demande d WHERE l.ville = d.ville AND p.idPersonne = d.idPersonne AND prenom='hugo' AND l.categorie='vente'; </code></li>
+                    </ol>
+
+
+                    <ol>
+                        <li>Afficher la liste des personne qui recherche une location</li>
+                        <li><code> SELECT * FROM personne WHERE idPersonne IN (SELECT idPersonne FROM demande WHERE categorie='location');</code></li>
+                    </ol>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section>
+
+        </section>
+
+
+
+    </main>
+
+
+
+    <!-- Script Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>
